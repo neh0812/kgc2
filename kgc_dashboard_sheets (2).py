@@ -29,7 +29,10 @@ def load_sheet(sheet_name):
     encoded_name = quote(sheet_name)
     url = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet={encoded_name}"
     try:
-        df = pd.read_csv(url, encoding="utf-8")
+        import io, requests
+response = requests.get(url)
+response.encoding = "utf-8"
+df = pd.read_csv(io.StringIO(response.text))
         return df
     except Exception as e:
         st.error(f"❌ 데이터 로드 실패: {e}\n스프레드시트 ID와 공유 설정을 확인하세요.")
